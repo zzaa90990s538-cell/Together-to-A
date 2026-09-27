@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Together To A+ | منصة الدعم الأكاديمي</title>
+<meta name="theme-color" content="#0d2b66">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;font-family:'Cairo',sans-serif;margin:0;padding:0}
+body{background:#eef4ff;min-height:100vh}
+.app{max-width:600px;margin:auto;background:#fff;min-height:100vh;box-shadow:0 0 30px rgba(0,0,0,0.08)}
+.top{background:linear-gradient(135deg,#0d2b66,#1e40af);color:#fff;padding:22px;text-align:center}
+.top h1{font-size:22px;font-weight:800}
+.top p{font-size:13px;opacity:0.9;margin-top:4px}
+.card{padding:24px}
+.card h3{color:#0d2b66;margin-bottom:16px;font-size:18px}
+label{font-size:13px;color:#334155;font-weight:700;margin-top:10px;display:block}
+input,select{width:100%;padding:13px;margin-top:6px;border:1.5px solid #cbd5e1;border-radius:12px;outline:none;transition:0.2s}
+input:focus,select:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.1)}
+.btn{width:100%;padding:14px;background:#2563eb;color:#fff;border:none;border-radius:12px;font-weight:800;cursor:pointer;margin-top:16px;font-size:15px}
+.btn:active{transform:scale(0.98)}
+.empty{text-align:center;color:#94a3b8;padding:40px 20px;border:2px dashed #cbd5e1;border-radius:14px;margin-top:16px}
+.item{background:#f8fafc;border:1px solid #e2e8f0;padding:14px;border-radius:12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.item b{color:#0d2b66}
+.badge{background:#dbeafe;color:#1e40af;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.count{text-align:center;margin-top:16px;color:#64748b;font-size:13px}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="top">
+<h1>Together To A+ 🎓</h1>
+<p>منصة حقيقية - اللي يسجل هو اللي بيظهر</p>
+</div>
+
+<div class="card">
+<h3>التسجيل في المنصة</h3>
+
+<label>الاسم الثلاثي</label>
+<input id="n" placeholder="مثال: سارة أحمد">
+
+<label>التخصص</label>
+<input id="s" placeholder="مثال: علوم حاسب">
+
+<label>الكلية</label>
+<input id="c" placeholder="مثال: حاسبات ومعلومات - المنصورة">
+
+<label>الفرقة</label>
+<select id="y">
+<option>الفرقة الأولى</option>
+<option>الفرقة الثانية</option>
+<option>الفرقة الثالثة</option>
+<option>الفرقة الرابعة</option>
+<option>خريج / محاضر</option>
+</select>
+
+<label>رقم الواتساب (اختياري)</label>
+<input id="p" placeholder="01xxxxxxxxx">
+
+<button class="btn" onclick="add()">إنشاء حساب ودخول المنصة →</button>
+
+<div id="list"></div>
+<div id="counter" class="count"></div>
+</div>
+</div>
+
+<script>
+let arr = JSON.parse(localStorage.getItem('tta_final_v2')||'[]');
+
+function show(){
+let d = document.getElementById('list');
+let counter = document.getElementById('counter');
+if(arr.length==0){
+d.innerHTML = '<div class="empty">المنصة فاضية حالياً 📭<br>لا يوجد مسجلين - أول شخص يسجل سيظهر هنا</div>';
+counter.innerHTML = '';
+return;
+}
+let h = '<h3 style="margin-top:24px;color:#0d2b66">المسجلين حالياً ('+arr.length+')</h3>';
+arr.slice().reverse().forEach(x=>{
+h+=`<div class="item"><div><b>${x.n}</b><br><small style="color:#64748b">${x.s} - ${x.c}</small></div><span class="badge">${x.y}</span></div>`;
+});
+d.innerHTML = h;
+counter.innerHTML = 'إجمالي المسجلين: '+arr.length+' طالب';
+}
+
+function add(){
+let name = document.getElementById('n').value.trim();
+let spec = document.getElementById('s').value.trim();
+let col = document.getElementById('c').value.trim();
+let year = document.getElementById('y').value;
+let phone = document.getElementById('p').value.trim();
+
+if(!name){alert('اكتبي اسمك');return;}
+if(!spec){alert('اكتبي التخصص');return;}
+
+let o = {n:name, s:spec, c:col, y:year, p:phone, time: Date.now()};
+arr.push(o);
+localStorage.setItem('tta_final_v2', JSON.stringify(arr));
+
+// فضي الحقول
+document.getElementById('n').value='';
+document.getElementById('s').value='';
+document.getElementById('c').value='';
+document.getElementById('p').value='';
+
+show();
+alert('تم التسجيل بنجاح ✅ أهلاً '+name);
+}
+
+show();
+</script>
+</body>
+</html>
